@@ -2,7 +2,7 @@ const {Router}=require("express");
 const authentication=require("../middlewares/authentication.middleware")
 const todo=Router();
 const Todo=require("../models/todo.model");
-const { findOne } = require("../models/user.model");
+
 
 todo.get("/",authentication,async(req,res)=>{
   try{

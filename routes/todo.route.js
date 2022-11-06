@@ -18,12 +18,12 @@ todo.get("/",authentication,async(req,res)=>{
 })
 
 todo.post("/create",authentication,async(req,res)=>{
-    const {user_id,title,discription}=req.body
+    const {user_id,title}=req.body
     try{
         const new_todo=new Todo({user_id:user_id,
             title:title,
             status:false,
-            discription:discription})
+            })
            await new_todo.save()
            res.send({"mesg":"Todo created successfully"})
     }

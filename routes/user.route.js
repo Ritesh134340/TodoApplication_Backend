@@ -21,7 +21,7 @@ user.post("/signup",async(req,res)=>{
           const new_user=new User({first_name:first_name,last_name:last_name,email:email,password:hash})
 
           await new_user.save();
-         res.send("Signup Successful")
+         res.send({"mesg":"Signup Successful"})
         });
     }
 

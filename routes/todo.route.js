@@ -7,7 +7,7 @@ const Todo=require("../models/todo.model");
 todo.get("/",authentication,async(req,res)=>{
   try{
     const user_id=req.body.user_id;
-    const document=await Todo.find({$or:[req.query || {user_id:user_id} ]})
+    const document=await Todo.find({$or:[req.query, {user_id:user_id} ]})
     
     res.send({"todos":document})
   }

@@ -12,7 +12,7 @@ todo.get("/",authentication,async(req,res)=>{
        if(size!==0){
         const user_id=req.body.user_id;
         req.query.user_id=user_id
-        console.log(req.query)
+
         const document=await Todo.find( req.query)
         res.send({"todos":document})
        }
@@ -51,9 +51,10 @@ todo.post("/create",authentication,async(req,res)=>{
 
    todo.patch("/update/:id",authentication,async(req,res)=>{
     const id=req.params.id;
+    console.log(req.body)
     try{
-        const document=await Todo.findByIdAndUpdate({_id:id},req.body)
-        
+         await Todo.findByIdAndUpdate({_id:id},req.body)
+         const document=await Todo.findOne({_id:id})
         res.status(200).send({"mesg":"Todo updated successfully",data:document})
     }
     catch(err){

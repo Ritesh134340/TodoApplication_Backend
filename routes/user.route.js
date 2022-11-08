@@ -30,26 +30,34 @@ user.post("/signup",async(req,res)=>{
 user.post("/login",async(req,res)=>{
   const {email,password}=req.body;
   const user_document=await User.findOne({email:email});
-  const first_name=user_document.first_name;
-  const last_name=user_document.last_name;
-  const user_email=user_document.email;
-  const hash=user_document.password;
+  console.log(user_document)
+  if(user_document){
+    const first_name=user_document.first_name;
+    const last_name=user_document.last_name;
+    const user_email=user_document.email;
+    const hash=user_document.password;
+  
+    const user_id=user_document._id;
 
-  const user_id=user_document._id;
+    bcrypt.compare(password,hash,(err,result)=>{
+      if(result){
+        const token=jwt.sign({user_id:user_id,email:email},process.env.SECRET_KEY)
+        res.send({"mesg":"Login Successful","token":token,"name":first_name,"title":last_name,"email":user_email})
+      }
+      if(!result){
+       res.send({"mesg":"Invalid email/password"})
+      }
+      if(err){
+       console.log(err);
+       res.send({"mesg":"Login failed"})
+      }
+     })
+  }else{
+    res.send({"mesg":"User not found, Please Signup"})
+  }
+ 
 
-  bcrypt.compare(password,hash,(err,result)=>{
-   if(result){
-     const token=jwt.sign({user_id:user_id,email:email},process.env.SECRET_KEY)
-     res.send({"mesg":"Login Successful","token":token,"name":first_name,"title":last_name,"email":user_email})
-   }
-   if(!result){
-    res.send({"mesg":"Invalid email/password"})
-   }
-   if(err){
-    console.log(err);
-    res.send({"mesg":"Login failed"})
-   }
-  })
+ 
 })
 
 module.exports=user;

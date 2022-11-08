@@ -51,14 +51,14 @@ todo.post("/create",authentication,async(req,res)=>{
 
    todo.patch("/update/:id",authentication,async(req,res)=>{
     const id=req.params.id;
-    console.log(req.body)
+     
     try{
          await Todo.findByIdAndUpdate({_id:id},req.body)
          const document=await Todo.findOne({_id:id})
         res.status(200).send({"mesg":"Todo updated successfully",data:document})
     }
     catch(err){
-        res.status(404).send({"mesg":"Something went wrong"})
+        res.status(404).send({"mesg":"Something went wrong",error:err})
     }
   
    })

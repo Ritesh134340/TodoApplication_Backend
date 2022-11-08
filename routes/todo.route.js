@@ -53,8 +53,8 @@ todo.post("/create",authentication,async(req,res)=>{
     const id=req.params.id;
     try{
         const document=await Todo.findByIdAndUpdate({_id:id},req.body)
-        console.log(document)
-        res.status(200).send("Todo updated successfully")
+        
+        res.status(200).send({"mesg":"Todo updated successfully",data:document})
     }
     catch(err){
         res.status(404).send({"mesg":"Something went wrong"})

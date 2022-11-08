@@ -30,7 +30,7 @@ user.post("/signup",async(req,res)=>{
 user.post("/login",async(req,res)=>{
   const {email,password}=req.body;
   const user_document=await User.findOne({email:email});
-  console.log(user_document)
+
   if(user_document){
     const first_name=user_document.first_name;
     const last_name=user_document.last_name;

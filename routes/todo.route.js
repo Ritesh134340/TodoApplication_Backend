@@ -22,7 +22,16 @@ todo.get("/",authentication,async(req,res)=>{
         res.send({"todos":document})
        }
         
-     
+     todo.get("/:id",authentication,async(req,res)=>{
+          try{
+              const id=req.params.id
+              const document=await Todo.findOne({_id:id})
+              res.send({data:document})
+          }
+          catch(err){
+            res.status(404).send({"mesg":"Couldn't fetch data,try again"})
+          }
+     })
    
   }
   catch(err){

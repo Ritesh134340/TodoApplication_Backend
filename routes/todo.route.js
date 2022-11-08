@@ -53,9 +53,14 @@ todo.post("/create",authentication,async(req,res)=>{
     const id=req.params.id;
      
     try{
-         await Todo.findByIdAndUpdate({_id:id},req.body)
-         const document=await Todo.findOne({_id:id})
-        res.status(200).send({"mesg":"Todo updated successfully",data:document})
+        if(Object.keys(req.body).length>0){
+            await Todo.findByIdAndUpdate({_id:id},req.body)
+            const document=await Todo.findOne({_id:id})
+           res.status(200).send({"mesg":"Todo updated successfully",data:document})
+        }else{
+            res.send({"mesg":"Please give value to update"})
+        }
+        
     }
     catch(err){
         res.status(404).send({"mesg":"Something went wrong",error:err})
@@ -67,7 +72,6 @@ todo.post("/create",authentication,async(req,res)=>{
     const id=req.params.id;
    
     try{
-       
         await Todo.findOneAndDelete({ _id: id });
         res.status(200).send({"mesg":"Deleted Successfully"})
     }

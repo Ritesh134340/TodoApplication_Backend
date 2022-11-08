@@ -5,11 +5,25 @@ const Todo=require("../models/todo.model");
 
 
 todo.get("/",authentication,async(req,res)=>{
-  try{
-    const user_id=req.body.user_id;
-    const document=await Todo.find({$or:[req.query, {user_id:user_id} ]})
-    
-    res.send({"todos":document})
+  try{ 
+       let filter=req.query
+       let size=Object.keys(filter).length;
+     
+       if(size!==0){
+        const user_id=req.body.user_id;
+        req.query.user_id=user_id
+        console.log(req.query)
+        const document=await Todo.find( req.query)
+        res.send({"todos":document})
+       }
+       else{
+        const user_id=req.body.user_id;
+        const document=await Todo.find( {user_id:user_id})
+        res.send({"todos":document})
+       }
+        
+     
+   
   }
   catch(err){
     console.log(err);

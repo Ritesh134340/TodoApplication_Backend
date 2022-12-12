@@ -5,49 +5,76 @@ const Todo=require("../models/todo.model");
 
 
 todo.get("/",authentication,async(req,res)=>{
-  try{ 
-       let filter=req.query
-       let size=Object.keys(filter).length;
+   const user_id=req.body.user_id
+    let {order, category ,status} = req.query; 
+    let Order=1;
+    if(order){
+        if(order[0]==='desc'){
+            Order=-1
+        } 
+    }
+      if (status  && category) {
+       
+          const data = await Todo.find({$and:[{user_id:user_id},{status:status},{category:category}]}).sort({date:Order});
+          res.send({"todos":data})
+      } else if(status) {
+          const data = await Todo.find({$and:[{user_id:user_id},{status:status}]}).sort({date:Order});
+          res.send({"todos":data})
+      }
+      else if(category){
+           const data=await Todo.find({$and:[{user_id:user_id},{category:category}]}).sort({date:Order})
+           res.send({"todos":data})
+          
+      }
+      else {
+        const data = await Todo.find({user_id:user_id}).sort({date:Order});
+  
+        res.send({"todos":data})
+       }
      
-       if(size!==0){
-        const user_id=req.body.user_id;
-        req.query.user_id=user_id
+})
 
-        const document=await Todo.find( req.query)
-        res.send({"todos":document})
-       }
-       else{
-        const user_id=req.body.user_id;
-        const document=await Todo.find( {user_id:user_id})
-        res.send({"todos":document})
-       }
-        
-     todo.get("/:id",authentication,async(req,res)=>{
-          try{
-              const id=req.params.id
-              const document=await Todo.findOne({_id:id})
-              res.send({data:document})
-          }
-          catch(err){
-            res.status(404).send({"mesg":"Couldn't fetch data,try again"})
-          }
-     })
-   
-  }
-  catch(err){
-    console.log(err);
-    res.send({"mesg":"Failed to get todos"})
-  }
- 
+
+
+
+
+
+      
+todo.get("/:id",authentication,async(req,res)=>{
+    try{
+        const id=req.params.id
+        const document=await Todo.findOne({_id:id})
+        res.send({data:document})
+    }
+    catch(err){
+      res.status(404).send({"mesg":"Couldn't fetch data,try again"})
+    }
 })
 
 todo.post("/create",authentication,async(req,res)=>{
-    const {user_id,title}=req.body
+   
+
+    const {user_id,title,subtask,status,category,description}=req.body
+      
+         
     try{
+        let date=(new Date())
+        date=date.toDateString()
+
+        let time=new Date()   
+        time=(time.toTimeString().split(" ")[0])
+
+
         const new_todo=new Todo({user_id:user_id,
             title:title,
-            status:false,
+            subtask:subtask,
+            status:status,
+            category:category,
+            description:description,
+            date:date,
+            time:time
             })
+         
            await new_todo.save()
            res.send({"mesg":"Todo created successfully"})
     }

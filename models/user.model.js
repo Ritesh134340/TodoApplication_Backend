@@ -1,10 +1,11 @@
 const mongoose=require("mongoose");
 
 const userSchema=new mongoose.Schema({
-   first_name:String,
+   first_name:{type:String, required:true},
    last_name:String,
    email:String,
-   password:String
+   password:String,
+   image:String
 })
 
 

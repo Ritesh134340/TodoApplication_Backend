@@ -3,7 +3,7 @@ const mongoose=require("mongoose");
 const todoSchema=new mongoose.Schema({
     user_id:{type:String,required:true},
     title:{type:String,required:true},
-    subtask:{type:Array,default:["No subtask added."]},
+    sub:{type:[{subtask:String,id:String}],default:[{subtask:"You dont't have subtask.", id:"xya07xef"}]},
     status:{type:String,default:"pending"},
     category:{type:String,default:"others"},
     description:{type:String,default:"No description is added"},

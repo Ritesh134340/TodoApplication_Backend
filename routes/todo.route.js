@@ -6,6 +6,8 @@ const Todo=require("../models/todo.model");
 
 todo.get("/",authentication,async(req,res)=>{
    const user_id=req.body.user_id
+ 
+   
     let {order, category ,status} = req.query; 
     let Order=1;
     if(order){
@@ -15,20 +17,19 @@ todo.get("/",authentication,async(req,res)=>{
     }
       if (status  && category) {
        
-          const data = await Todo.find({$and:[{user_id:user_id},{status:status},{category:category}]}).sort({date:Order});
+          const data = await Todo.find({$and:[{user_id:user_id},{status:status},{category:category}]}).sort({date:Order,time:-Order});
           res.send({"todos":data})
       } else if(status) {
-          const data = await Todo.find({$and:[{user_id:user_id},{status:status}]}).sort({date:Order});
+          const data = await Todo.find({$and:[{user_id:user_id},{status:status}]}).sort({date:Order,time:-Order});
           res.send({"todos":data})
       }
       else if(category){
-           const data=await Todo.find({$and:[{user_id:user_id},{category:category}]}).sort({date:Order})
+           const data=await Todo.find({$and:[{user_id:user_id},{category:category}]}).sort({date:Order,time:-Order})
            res.send({"todos":data})
           
       }
       else {
-        const data = await Todo.find({user_id:user_id}).sort({date:Order});
-  
+        const data = await Todo.find({user_id:user_id}).sort({date:Order,time:-Order});
         res.send({"todos":data})
        }
      
@@ -55,19 +56,19 @@ todo.post("/create",authentication,async(req,res)=>{
    
 
     const {user_id,title,subtask,status,category,description}=req.body
-      
-         
+       
     try{
-        let date=(new Date())
-        date=date.toDateString()
-
-        let time=new Date()   
-        time=(time.toTimeString().split(" ")[0])
-
-
+        let d = new Date();
+        let utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+        let nd = new Date(utc + (3600000*+5.5));
+        let  ist =  nd.toLocaleString();
+        let date=ist.split(", ")[0];
+        let time=ist.split(", ")[1];
+       
+      
         const new_todo=new Todo({user_id:user_id,
             title:title,
-            subtask:subtask,
+            sub:subtask,
             status:status,
             category:category,
             description:description,

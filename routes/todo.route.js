@@ -3,64 +3,35 @@ const authentication=require("../middlewares/authentication.middleware")
 const todo=Router();
 const Todo=require("../models/todo.model");
 
-
-// todo.get("/",authentication,async(req,res)=>{
-//    const user_id=req.body.user_id
- 
-   
-//     let {order, category ,status} = req.query; 
-//     let Order=1;
-//     if(order){
-//         if(order[0]==='desc'){
-//             Order=-1
-//         } 
-//     }
-//       if (status  && category) {
-       
-//           const data = await Todo.find({$and:[{user_id:user_id},{status:status},{category:category}]}).sort({date:Order,time:-Order});
-//           res.send({"todos":data})
-//       } else if(status) {
-//           const data = await Todo.find({$and:[{user_id:user_id},{status:status}]}).sort({date:Order,time:-Order});
-//           res.send({"todos":data})
-//       }
-//       else if(category){
-//            const data=await Todo.find({$and:[{user_id:user_id},{category:category}]}).sort({date:Order,time:-Order})
-//            res.send({"todos":data})
-          
-//       }
-//       else {
-//         const data = await Todo.find({user_id:user_id}).sort({date:Order,time:-Order});
-//         res.send({"todos":data})
-//        }
-     
-// })
-
-
 todo.get("/",authentication,async(req,res)=>{
     const user_id=req.body.user_id;
     let {order, category ,status,page,limit} = req.query; 
     let queryObj={}
-    let Order=-1;
-    console.log(req.query)
 
     queryObj.user_id=user_id
+
     if(category){
         queryObj.category=category
     }
     if(status){
         queryObj.status=status
     }
-     
+
+     let newData=Todo.find(queryObj)
+
     if(order){
+        let Order=-1;
         if(order[0]==="asc"){
            Order=-1
         }
         if(order[0]==="desc"){
           Order=1
         }
+
+       newData.sort({date:Order,time:Order})
     }
   
-    const data=await Todo.find(queryObj).sort({date:Order,time:Order});
+    const data=await newData;
 
     if(page && limit){
         let total=data.length;

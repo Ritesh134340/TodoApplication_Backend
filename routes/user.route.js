@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const user = Router();
 const User = require("../models/user.model");
 const upload=require("../middlewares/upload.middleware")
+const authentication=require("../middlewares/authentication.middleware")
 
 user.post("/signup", upload.single("image"), async (req, res) => {
   const path = `/images/${req.file.filename}`;
@@ -72,5 +73,35 @@ user.post("/login", async (req, res) => {
     res.send({ mesg: "User not found, Please Signup" });
   }
 });
+
+
+user.patch("/update",authentication,async(req,res)=>{
+  const user_id=req.body.user_id
+  
+  try{
+       await User.findByIdAndUpdate(user_id,req.body)  
+       let user=await User.findOne({_id:user_id})
+       const email=user.email
+       const token = jwt.sign(
+        { user_id: user_id, email: email },
+        process.env.SECRET_KEY
+      );
+
+      const document={
+        name:user.first_name,
+        title:user.last_name,
+        email:user.email,
+        token:token,
+        image:user.image
+      }
+        
+       res.status(200).send({"mesg":"User updated Successfully",document:document}) 
+      }
+    
+  catch(err){
+      res.status(404).send({"mesg":"Something went wrong",error:err})
+  }
+ 
+})
 
 module.exports = user;

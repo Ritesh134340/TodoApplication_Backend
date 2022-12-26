@@ -17,7 +17,7 @@ todo.get("/",authentication,async(req,res)=>{
         queryObj.status=status
     }
 
-     let newData=Todo.find(queryObj)
+    let newData=Todo.find(queryObj)
 
     if(order){
         let Order=-1;
@@ -28,29 +28,70 @@ todo.get("/",authentication,async(req,res)=>{
           Order=1
         }
 
-       newData.sort({date:Order,time:Order})
+       newData.sort({date:Order,createdAt:Order})
+       
     }
-  
-    const data=await newData;
+    
+    let currentPage=Number(page) || 1;
+    let perPage=+limit || 10;
+    let skip=(currentPage-1)*perPage;
 
-    if(page && limit){
-        let total=data.length;
-        let lastIndex=limit*page;
-        let firstIndex=lastIndex-limit;
-        let totalPages=Math.ceil(total/limit)
-        let newData=data.slice(firstIndex,lastIndex)
-        res.send({"todos":newData,"totalPages":totalPages})
-    }
+    newData= newData.skip(skip).limit(perPage)
+
+    let lengthData=await Todo.find(queryObj)
+
+    let totalPages=Math.ceil(lengthData.length/perPage)
+
+    let data=await newData
+
+     res.send({"todos":data,"totalPages":totalPages})
+
+
+
+    // if(page && limit){
+    //     let total=data.length;
+    //     let lastIndex=limit*page;
+    //     let firstIndex=lastIndex-limit;
+    //     let totalPages=Math.ceil(total/limit)
+    //     let newData= data.slice(firstIndex,lastIndex)
+    //     res.send({"todos":newData,"totalPages":totalPages})
+    // }
    
-    else{
-        res.send({"todos":data})
-    }
+  
+    
 
 
 })
 
 
+todo.get("/chartdata",authentication,async(req,res)=>{
+    const user_id=req.body.user_id;
+   
+    try{
+        let queryObj1={}
+        queryObj1.user_id=user_id
+        queryObj1.status="pending"
 
+        let queryObj2={}
+        queryObj2.user_id=user_id
+        queryObj2.status="completed"
+
+        let queryObj3={}
+        queryObj3.user_id=user_id
+        queryObj3.status="progress"
+
+
+        const completed=await Todo.find(queryObj2)
+        const pending=await Todo.find(queryObj1)
+        const progress=await Todo.find(queryObj3)
+
+
+        res.status(200).send({"completed":completed,"pending":pending,"progress":progress})
+    }
+    catch(err){
+        res.status(404).send({"mesg":"Couldn't fetch data,try again"})  
+    }
+})
 
 
       

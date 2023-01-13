@@ -7,7 +7,7 @@ const upload=require("../middlewares/upload.middleware")
 const authentication=require("../middlewares/authentication.middleware")
 
 user.post("/signup",upload.single("image"), async (req, res) => {
-  const path = `/images/${req.file.filename}`;
+  const path = `${process.env.PROFILE_IMAGE_PATH_URL}/images/${req.file.filename}`;
 
   const { first_name, last_name, email, password } = req.body;
   const check = await User.findOne({ email: email });
@@ -35,6 +35,7 @@ user.post("/signup",upload.single("image"), async (req, res) => {
 });
 
 user.post("/login", async (req, res) => {
+ 
   const { email, password } = req.body;
   const user_document = await User.findOne({ email: email });
 
@@ -81,7 +82,7 @@ user.post("/login", async (req, res) => {
 user.patch("/update",upload.single("image"),authentication,async(req,res)=>{
    let filename=req.file?.filename
    if(typeof filename!=="undefined"){
-   const  path = `/images/${filename}`;
+   const  path = `${process.env.PROFILE_IMAGE_PATH_URL}/images/${filename}`;
      req.body.image=path;
    }
  

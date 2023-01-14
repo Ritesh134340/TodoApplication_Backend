@@ -9,22 +9,26 @@ const cors=require("cors");
 const passport=require("passport")
 const cookieSession = require("cookie-session");
 
-app.use(cors({
-  origin:`${process.env.REACT_APP_URL}`,
-  methods:"GET,PUT,POST,DELETE,PATCH",
-  credentials:true
-}))
+
 
 
 app.use(
   cookieSession({
-      secret:"merntodoapp",
+      name:"session",
+      keys:["ritesh"],
       maxAge:24*60*60*100
   })
 );
 
 app.use(passport.initialize())
 app.use(passport.session());
+
+app.use(cors({
+  origin:`${process.env.REACT_APP_URL}`,
+  methods:"GET,PUT,POST,DELETE,PATCH",
+  credentials:true
+}))
+
 app.use("/images",express.static("images"))
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));

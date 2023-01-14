@@ -22,12 +22,12 @@ passport.use(new GoogleStrategy({
     callbackURL:"https://todo-application-z9c7.onrender.com/auth/google/callback",
     scope:['email','profile']
   },
-  async function(accessToken, refreshToken, profile, done) {
+  async function(accessToken, refreshToken, profile, cb) {
     try{
       const document=await User.findOne({email: profile.emails[0].value })
       if(document){
      
-        done(null,document)
+        cb(null,document)
       }
       else{    
     const password = generator.generate({
@@ -46,7 +46,7 @@ passport.use(new GoogleStrategy({
         await new_user.save();
         const document=await User.findOne({email:profile.emails[0].value})
        
-         done(null,document)
+         cb(null,document)
   
       }
     }

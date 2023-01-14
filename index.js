@@ -7,16 +7,16 @@ const express=require("express");
 const app=express();
 const cors=require("cors");
 const passport=require("passport")
-const cookieSession = require("cookie-session");
+const session = require("express-session");
 
 
 
 
 app.use(
-  cookieSession({
-      name:"session",
-      keys:["ritesh"],
-      maxAge:24*60*60*100
+  session({
+      secret:"session",
+      resave:true,
+      saveUninitialized:true
   })
 );
 

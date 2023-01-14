@@ -32,8 +32,13 @@ auth.get('/google/profile',(req,res)=>{
   }
 })
 
- auth.get('/google/callback', 
-  passport.authenticate('google', { failureRedirect: `${process.env.REACT_APP_URL}/login`,successRedirect:`${process.env.REACT_APP_URL}/googlecheck`})
-  );
+ 
+
+  auth.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: `${process.env.REACT_APP_URL}/login` }),
+  function(req, res) {
+  
+    res.redirect(`${process.env.REACT_APP_URL}/googlecheck`);
+  });
 
 module.exports=auth

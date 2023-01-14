@@ -7,7 +7,7 @@ const express=require("express");
 const app=express();
 const cors=require("cors");
 const passport=require("passport")
-const session = require("express-session");
+const cookieSession = require("cookie-session");
 
 app.use(cors({
   origin:`${process.env.REACT_APP_URL}`,
@@ -17,10 +17,8 @@ app.use(cors({
 
 
 app.use(
-  session({
-      secret:process.env.SECRET_KEY,
-      resave: false,
-      saveUninitialized:false,
+  cookieSession({
+      secret:"merntodoapp",
       maxAge:24*60*60*100
   })
 );

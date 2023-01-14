@@ -6,13 +6,13 @@ const generator = require('generate-password');
 
 passport.serializeUser((user,done)=>{
 
-  return done(null,user)
+  return done(null,user._id)
 })
 
-passport.deserializeUser((user, done) => {
-  // const authenticatedUser=await User.findOne({_id:id})
+passport.deserializeUser(async(id, done) => {
+  const authenticatedUser=await User.findById({_id:id})
   
-  return done(null,user)
+  return done(null,authenticatedUser)
 });
 
 

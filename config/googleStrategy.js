@@ -26,7 +26,8 @@ passport.use(new GoogleStrategy({
           last_name:profile.name.familyName,
           email: profile.emails[0].value,
           password:password,
-          image:profile.photos[0].value
+          image:profile.photos[0].value,
+          
         });
         await new_user.save();
         const document=await User.findOne({email:profile.emails[0].value})
@@ -43,11 +44,13 @@ passport.use(new GoogleStrategy({
 ));
 
 passport.serializeUser((user,done)=>{
-  done(null,user._id)
+  console.log("inside serial")
+  done(null,user)
 })
 
-passport.deserializeUser(async(id, done) => {
-  const authenticatedUser=await User.findOne({_id:id})
+passport.deserializeUser(async(user, done) => {
+  console.log("inside des")
+  const authenticatedUser=await User.findOne({_id:user._id})
   done(null,authenticatedUser)
 });
 

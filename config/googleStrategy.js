@@ -5,7 +5,7 @@ const generator = require('generate-password');
 
 
 passport.serializeUser((user,done)=>{
-
+console.log(user._id)
   return done(null,user._id)
 })
 

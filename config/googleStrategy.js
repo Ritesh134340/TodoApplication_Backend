@@ -4,10 +4,22 @@ const User=require("../models/user.model");
 const generator = require('generate-password');
 
 
+passport.serializeUser((user,done)=>{
+
+  done(null,user._id)
+})
+
+passport.deserializeUser(async(id, done) => {
+  const authenticatedUser=await User.findOne({_id:id})
+  
+  done(null,authenticatedUser)
+});
+
+
 passport.use(new GoogleStrategy({
     clientID:process.env.GOOGLE_CLIENT_ID,
     clientSecret:process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL:"https://todo-application-z9c7.onrender.com/auth/google/callback",
+    callbackURL:"/auth/google/callback",
     scope:['email','profile']
   },
   async function(accessToken, refreshToken, profile, done) {
@@ -15,7 +27,7 @@ passport.use(new GoogleStrategy({
       const document=await User.findOne({email: profile.emails[0].value })
       if(document){
      
-        return done(null,document)
+        done(null,document)
       }
       else{    
     const password = generator.generate({
@@ -27,12 +39,14 @@ passport.use(new GoogleStrategy({
           last_name:profile.name.familyName,
           email: profile.emails[0].value,
           password:password,
-          image:profile.photos[0].value
+          image:profile.photos[0].value,
+          googleId:profile.id
+
         });
         await new_user.save();
         const document=await User.findOne({email:profile.emails[0].value})
        
-        return done(null,document)
+         done(null,document)
   
       }
     }
@@ -43,16 +57,7 @@ passport.use(new GoogleStrategy({
   }
 ));
 
-passport.serializeUser((user,done)=>{
-  console.log("in serial")
-  done(null,user._id)
-})
 
-passport.deserializeUser(async(id, done) => {
-  const authenticatedUser=await User.findOne({_id:id})
-  console.log("in des")
-  done(null,authenticatedUser)
-});
 
 
 

@@ -14,6 +14,7 @@ passport.use(new GoogleStrategy({
     try{
       const document=await User.findOne({email: profile.emails[0].value })
       if(document){
+        console.log(document)
         done(null,document)
       }
       else{    
@@ -30,7 +31,7 @@ passport.use(new GoogleStrategy({
         });
         await new_user.save();
         const document=await User.findOne({email:profile.emails[0].value})
-  
+        console.log(document)
         done(null,document)
   
       }

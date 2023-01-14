@@ -18,10 +18,9 @@ app.use(cors({
 
 app.use(
   session({
-      secret:process.env.SECRET_KEY,
-      resave: false,
+      secret:"todoapplication",
+      resave:true,
       saveUninitialized: false,
-      maxAge:24*60*60*100
   })
 );
 

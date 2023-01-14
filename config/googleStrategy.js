@@ -14,8 +14,8 @@ passport.use(new GoogleStrategy({
     try{
       const document=await User.findOne({email: profile.emails[0].value })
       if(document){
-        console.log(document)
-        done(null,document)
+     
+        return done(null,document)
       }
       else{    
     const password = generator.generate({
@@ -31,8 +31,8 @@ passport.use(new GoogleStrategy({
         });
         await new_user.save();
         const document=await User.findOne({email:profile.emails[0].value})
-        console.log(document)
-        done(null,document)
+       
+        return done(null,document)
   
       }
     }
@@ -44,11 +44,13 @@ passport.use(new GoogleStrategy({
 ));
 
 passport.serializeUser((user,done)=>{
+  console.log("in serial")
   done(null,user._id)
 })
 
 passport.deserializeUser(async(id, done) => {
   const authenticatedUser=await User.findOne({_id:id})
+  console.log("in des")
   done(null,authenticatedUser)
 });
 

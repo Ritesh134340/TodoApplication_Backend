@@ -18,16 +18,15 @@ app.use(cors({
 
 app.use(
   session({
-      secret:"todoapplication",
-      resave:true,
-      saveUninitialized: false,
+      secret:process.env.SECRET_KEY,
+      resave: false,
+      saveUninitialized:false,
+      maxAge:24*60*60*100
   })
 );
 
 app.use(passport.initialize())
 app.use(passport.session());
-// app.use(cookieSession({name:"session",keys:['cyberwolve'],maxAge:24*60*60*100}));
-// app.use(passport.session());
 app.use("/images",express.static("images"))
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));

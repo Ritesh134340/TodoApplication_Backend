@@ -12,7 +12,7 @@ passport.use(new GoogleStrategy({
     callbackURL:"https://todo-application-z9c7.onrender.com/auth/google/callback",
     scope:['email','profile']
   },
-  async function(accessToken, refreshToken, profile,) {cb
+  async function(accessToken, refreshToken, profile,cb) {
     try{
       const document=await User.findOne({email: profile.emails[0].value })
       if(document){

@@ -4,30 +4,13 @@ require("./config/googleStrategy")
 
 const connection=require("./config/db");
 const express=require("express");
-const app=express();
+const cookieSession = require("cookie-session");
 const cors=require("cors");
 const passport=require("passport")
-const session = require("express-session");
+const app=express();
 
 
-app.set("trust proxy",1)
 
-app.use(
-  session({
-      secret:"session",
-      resave:true,
-      saveUninitialized:true,
-      cookie:{
-        sameSite:"none",
-        secure:true,
-        maxAge:1000*60*60*24*7
-      }
-    
-  })
-);
-
-app.use(passport.initialize())
-app.use(passport.session());
 
 app.use(cors({
   origin:`${process.env.REACT_APP_URL}`,
@@ -35,6 +18,23 @@ app.use(cors({
   credentials:true
 }))
 
+
+app.use(
+  cookieSession({
+    secret:process.env.SECRET_KEY,
+    resave:true,
+    saveUninitialized:true,
+    cookie:{
+      sameSite:"none",
+      secure:true,
+      maxAge:1000*60*60*24*7
+    }
+     
+  })
+);
+
+app.use(passport.initialize())
+app.use(passport.session());
 app.use("/images",express.static("images"))
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));

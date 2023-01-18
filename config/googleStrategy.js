@@ -1,66 +1,50 @@
+const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const passport=require("passport");
 const User=require("../models/user.model");
 const generator = require('generate-password');
 
-
-
-
 passport.use(new GoogleStrategy({
-    clientID:process.env.GOOGLE_CLIENT_ID,
-    clientSecret:process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL:"https://todo-application-z9c7.onrender.com/auth/google/callback",
-    scope:['email','profile']
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: 'http://localhost:8000/auth/google/callback',
   },
-  async function(accessToken, refreshToken, profile,cb) {
-    try{
-      const document=await User.findOne({email: profile.emails[0].value })
-      if(document){
+  async function(accessToken, refreshToken, profile, done) {
     
-      cb(null,document)
+    const GoogleUserData=(profile._json)
+    const {sub,given_name,family_name,picture,email}=GoogleUserData
+    
+    try{
+        const document=await User.findOne({email:email })
+        if(document){
+      
+        done(null,document)
+        }
+        else{    
+      const password = generator.generate({
+      length: 10,
+      numbers: true
+      });
+          const new_user = new User({
+            first_name:given_name,
+            last_name:family_name,
+            email:email,
+            password:password,
+            image:picture,
+            googleId:sub
+          });
+          await new_user.save();
+          const document=await User.findOne({email:email})
+          done(null,document)
+    
+        }
       }
-      else{    
-    const password = generator.generate({
-    length: 10,
-    numbers: true
-    });
-        const new_user = new User({
-          first_name:profile.name.givenName,
-          last_name:profile.name.familyName,
-          email: profile.emails[0].value,
-          password:password,
-          image:profile.photos[0].value,
-          googleId:profile.id
-        });
-        await new_user.save();
-        const document=await User.findOne({email:profile.emails[0].value})
-  
-     cb(null,document)
-  
+      catch(err){
+        console.log(err)
       }
     }
-    catch(err){
-      console.log(err)
-    }
-  
-  }
 ));
 
 
 
-passport.serializeUser((user,done)=>{
- 
- done(null,user.id)
-})
 
-passport.deserializeUser((id, done) => {
-  
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-})
-
-
-
-
-
+module.exports=passport

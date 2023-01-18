@@ -29,7 +29,7 @@ auth.get('/google/callback', function(req, res, next) {
       }
 
     const userString = encodeURIComponent(JSON.stringify(newUser));
-    res.redirect(`http://localhost:3000/googleCheck?user=${userString}`);
+    res.redirect(`https://todoapplicationmern.netlify.app/googleCheck?user=${userString}`);
    }
 })(req, res, next);
 });

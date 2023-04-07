@@ -42,7 +42,9 @@ const userRouter=require("./routes/user.route")
 const todoRouter=require("./routes/todo.route");
 const googleRouter=require("./routes/google.route")
 
-
+app.get("/",(req,res)=>{
+res.status(200).send({mesg:"Welcome to TodoApplication !"})
+})
 app.use("/user",userRouter)
 app.use("/todo",todoRouter)
 app.use("/auth",googleRouter)

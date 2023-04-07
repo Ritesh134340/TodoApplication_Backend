@@ -6,7 +6,7 @@ const generator = require('generate-password');
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: https://good-puce-top-coat.cyclic.app/auth/google/callback,
+    callbackURL:"https://good-puce-top-coat.cyclic.app/auth/google/callback",
   },
   async function(accessToken, refreshToken, profile, done) {
     

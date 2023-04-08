@@ -6,7 +6,7 @@ const jwt=require("jsonwebtoken")
  try{
     jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
         if(err){
-            res.send({"mesg":"Something went wrong please try again later"})
+            res.send({mesg:"Something went wrong please try again later"})
         }
         
         const {email,user_id}=decoded;
@@ -19,7 +19,7 @@ const jwt=require("jsonwebtoken")
  }
  catch(error){
      console.log(error);
-     res.send({"mesg":"Please login again"})
+     res.send({mesg:"Please login again"})
  }
 
  

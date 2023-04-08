@@ -18,7 +18,7 @@ user.post("/signup",upload.single("image"), async (req, res) => {
   } else {
     bcrypt.hash(password, 4, async function (err, hash) {
       if (err) {
-        res.send("Something went wrong please try again");
+        res.send({mesg:"Something went wrong please try again"});
       }
       const new_user = new User({
         first_name: first_name,
@@ -109,11 +109,11 @@ user.patch("/update",upload.single("image"),authentication,async(req,res)=>{
         image:user.image
       }
         
-       res.status(200).send({"mesg":"User updated Successfully",document:document}) 
+       res.status(200).send({mesg:"User updated Successfully",document:document}) 
       }
     
   catch(err){
-      res.status(404).send({"mesg":"Something went wrong",error:err})
+      res.status(404).send({mesg:"Something went wrong",error:err})
   }
  
 })

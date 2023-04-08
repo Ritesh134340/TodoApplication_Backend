@@ -11,7 +11,7 @@ const authorization=(permittedrole)=>{
         next()
      }
      else{
-        res.send("Not authorized")
+        res.send({mesg:"Not authorized"})
      }
   }
 }

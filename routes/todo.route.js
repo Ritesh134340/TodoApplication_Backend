@@ -45,7 +45,7 @@ todo.get("/",authentication,async(req,res)=>{
 
     let data=await newData
 
-     res.send({"todos":data,"totalPages":totalPages})
+     res.send({todos:data,totalPages:totalPages})
 
 
 
@@ -87,10 +87,10 @@ todo.get("/chartdata",authentication,async(req,res)=>{
         const progress=await Todo.find(queryObj3)
 
 
-        res.status(200).send({"completed":completed,"pending":pending,"progress":progress})
+        res.status(200).send({completed:completed,pending:pending,progress:progress})
     }
     catch(err){
-        res.status(404).send({"mesg":"Couldn't fetch data,try again"})  
+        res.status(404).send({mesg:"Couldn't fetch data,try again"})  
     }
 })
 
@@ -103,7 +103,7 @@ todo.get("/:id",authentication,async(req,res)=>{
         res.send({data:document})
     }
     catch(err){
-      res.status(404).send({"mesg":"Couldn't fetch data,try again"})
+      res.status(404).send({mesg:"Couldn't fetch data,try again"})
     }
 })
 
@@ -132,11 +132,11 @@ todo.post("/create",authentication,async(req,res)=>{
             })
          
            await new_todo.save()
-           res.send({"mesg":"Todo created successfully"})
+           res.send({mesg:"Todo created successfully"})
     }
     catch(err){
         console.log(err);
-        res.send({"mesg":"Couldn't create todo,please try again"})
+        res.send({mesg:"Couldn't create todo,please try again"})
     }
    
    })
@@ -148,14 +148,14 @@ todo.post("/create",authentication,async(req,res)=>{
         if(Object.keys(req.body).length>0){
             await Todo.findByIdAndUpdate({_id:id},req.body)
             const document=await Todo.findOne({_id:id})
-           res.status(200).send({"mesg":"Todo updated successfully",data:document})
+           res.status(200).send({mesg:"Todo updated successfully",data:document})
         }else{
-            res.send({"mesg":"Please give value to update"})
+            res.send({mesg:"Please give value to update"})
         }
         
     }
     catch(err){
-        res.status(404).send({"mesg":"Something went wrong",error:err})
+        res.status(404).send({mesg:"Something went wrong",error:err})
     }
   
    })
@@ -165,10 +165,10 @@ todo.post("/create",authentication,async(req,res)=>{
    
     try{
         await Todo.findOneAndDelete({ _id: id });
-        res.status(200).send({"mesg":"Deleted Successfully"})
+        res.status(200).send({mesg:"Deleted Successfully"})
     }
     catch(err){
-        res.send({"mesg":"Couldn't delete try again"})
+        res.send({mesg:"Couldn't delete try again"})
     }
   
    })

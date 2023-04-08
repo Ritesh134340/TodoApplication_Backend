@@ -9,7 +9,7 @@ const app=express();
 
 app.use(cors( 
 {
-  origin:`${process.env.REACT_APP_URL}`,
+  origin:"https://todoapplicationmern.netlify.app",
   methods:"GET,PUT,POST,DELETE,PATCH",
   credentials:true
 }

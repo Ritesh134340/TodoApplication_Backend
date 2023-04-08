@@ -14,11 +14,11 @@ user.post("/signup",upload.single("image"), async (req, res) => {
   const check = await User.findOne({ email: email });
 
   if (check) {
-    res.send({ mesg: "User already exist, please login" });
+    res.status(409).send({ mesg: "User already exist, please login" });
   } else {
     bcrypt.hash(password, 4, async function (err, hash) {
       if (err) {
-        res.send({mesg:"Something went wrong please try again"});
+        res.status(500).send({mesg:"Something went wrong please try again"});
       }
       const new_user = new User({
         first_name: first_name,
@@ -30,7 +30,7 @@ user.post("/signup",upload.single("image"), async (req, res) => {
 
       await new_user.save();
 
-      res.send({ mesg: "Signup Successful" });
+      res.status(200).send({ mesg: "Signup Successful" });
     });
   }
 });
@@ -57,7 +57,7 @@ user.post("/login", async (req, res) => {
           { user_id: user_id, email: email },
           process.env.SECRET_KEY
         );
-        res.send({
+        res.status(200).send({
           mesg: "Login Successful",
           token: token,
           name: first_name,
@@ -67,15 +67,15 @@ user.post("/login", async (req, res) => {
         });
       }
       if (!result) {
-        res.send({ mesg: "Invalid email/password" });
+        res.status(400).send({ mesg: "Invalid email/password" });
       }
       if (err) {
         console.log(err);
-        res.send({ mesg: "Login failed" });
+        res.status(500).send({ mesg: "Login failed" });
       }
     });
   } else {
-    res.send({ mesg: "User not found, Please Signup" });
+    res.status(404).send({ mesg: "User not found, Please Signup" });
   }
 });
 
@@ -113,7 +113,7 @@ user.patch("/update",upload.single("image"),authentication,async(req,res)=>{
       }
     
   catch(err){
-      res.status(404).send({mesg:"Something went wrong",error:err})
+      res.status(500).send({mesg:"Something went wrong",error:err})
   }
  
 })

@@ -100,7 +100,7 @@ todo.get("/:id",authentication,async(req,res)=>{
     try{
         const id=req.params.id
         const document=await Todo.findOne({_id:id})
-        res.send({data:document})
+        res.status(200).send({data:document})
     }
     catch(err){
       res.status(404).send({mesg:"Couldn't fetch data,try again"})
@@ -132,11 +132,11 @@ todo.post("/create",authentication,async(req,res)=>{
             })
          
            await new_todo.save()
-           res.send({mesg:"Todo created successfully"})
+           res.status(200).send({mesg:"Todo created successfully"})
     }
     catch(err){
         console.log(err);
-        res.send({mesg:"Couldn't create todo,please try again"})
+        res.status(500).send({mesg:"Couldn't create todo,please try again"})
     }
    
    })
@@ -150,7 +150,7 @@ todo.post("/create",authentication,async(req,res)=>{
             const document=await Todo.findOne({_id:id})
            res.status(200).send({mesg:"Todo updated successfully",data:document})
         }else{
-            res.send({mesg:"Please give value to update"})
+            res.status(500).send({mesg:"Please give value to update"})
         }
         
     }
@@ -168,7 +168,7 @@ todo.post("/create",authentication,async(req,res)=>{
         res.status(200).send({mesg:"Deleted Successfully"})
     }
     catch(err){
-        res.send({mesg:"Couldn't delete try again"})
+        res.status(500).send({mesg:"Couldn't delete try again"})
     }
   
    })

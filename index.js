@@ -7,13 +7,16 @@ const cors=require("cors");
 const app=express();
 
 
-app.use(cors( 
-{
-  origin:"https://todoapplicationmern.netlify.app",
-  methods:"GET,PUT,POST,DELETE,PATCH",
-  credentials:true
-}
-))
+app.use(cors());
+
+
+// app.use(cors( 
+// {
+//   origin:"https://todoapplicationmern.netlify.app",
+//   methods:"GET,PUT,POST,DELETE,PATCH",
+//   credentials:true
+// }
+// ))
 
 
 // app.use(

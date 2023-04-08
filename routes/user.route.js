@@ -2,6 +2,7 @@ const { Router } = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const user = Router();
+
 const User = require("../models/user.model");
 const upload=require("../middlewares/upload.middleware")
 const authentication=require("../middlewares/authentication.middleware")
@@ -82,6 +83,8 @@ user.post("/login", async (req, res) => {
 user.patch("/update",upload.single("image"),authentication,async(req,res)=>{
    let filename=req.file?.filename
    if(typeof filename!=="undefined"){
+
+
    const  path = `${process.env.PROFILE_IMAGE_PATH_URL}/images/${filename}`;
      req.body.image=path;
    }

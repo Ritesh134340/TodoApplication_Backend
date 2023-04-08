@@ -31,7 +31,12 @@ app.use(cors(
 // );
 
 app.use(passport.initialize())
+
 // app.use(passport.session());
+
+
+app.get("/",(req,res)=>{
+})
 
 app.use("/images",express.static("images"))
 app.use(express.json());
@@ -42,6 +47,11 @@ const userRouter=require("./routes/user.route")
 const todoRouter=require("./routes/todo.route");
 const googleRouter=require("./routes/google.route")
 
+
+
+app.get("/",(req,res)=>{
+  res.status(200).send({mesg:"Welcome to TodoApplication !"})
+})
 
 app.use("/user",userRouter)
 app.use("/todo",todoRouter)

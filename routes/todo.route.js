@@ -3,67 +3,54 @@ const authentication=require("../middlewares/authentication.middleware")
 const todo=Router();
 const Todo=require("../models/todo.model");
 
-todo.get("/",authentication,async(req,res)=>{
-
-    const user_id=req.body.user_id;
-    let {order, category ,status,page,limit} = req.query; 
-    let queryObj={}
-
-    queryObj.user_id=user_id
-
-    if(category){
-        queryObj.category=category
-    }
-    if(status){
-        queryObj.status=status
-    }
-
-    let newData=Todo.find(queryObj)
-
-    if(order){
-        let Order=-1;
-        if(order[0]==="asc"){
-           Order=-1
-        }
-        if(order[0]==="desc"){
-          Order=1
-        }
-
-       newData.sort({date:Order,createdAt:Order})
-       
-    }
-    
-    let currentPage=Number(page) || 1;
-    let perPage=+limit || 10;
-    let skip=(currentPage-1)*perPage;
-
-    newData= newData.skip(skip).limit(perPage)
-
-    let lengthData=await Todo.find(queryObj)
-
-    let totalPages=Math.ceil(lengthData.length/perPage)
-
-    let data=await newData
-
-     res.send({todos:data,totalPages:totalPages})
-
-
-
-    // if(page && limit){
-    //     let total=data.length;
-    //     let lastIndex=limit*page;
-    //     let firstIndex=lastIndex-limit;
-    //     let totalPages=Math.ceil(total/limit)
-    //     let newData= data.slice(firstIndex,lastIndex)
-    //     res.send({"todos":newData,"totalPages":totalPages})
-    // }
-   
+todo.get("/", authentication, async (req, res) => {
+    try {
+      const user_id = req.body.user_id;
+      let { order, category, status, page, limit } = req.query;
+      let queryObj = {};
   
-    
+      queryObj.user_id = user_id;
+  
+      if (category) {
+        queryObj.category = category;
+      }
+      if (status) {
+        queryObj.status = status;
+      }
+  
+      let newData = Todo.find(queryObj).lean();
+  
+      let Order = -1;
+      if (order) {
+        if (order[0] === "asc") {
+          Order = -1;
+        }
+        if (order[0] === "desc") {
+          Order = 1;
+        }
+      }
+      newData = newData.sort({ createdAt: Order });
+  
+      let currentPage = parseInt(page) || 1;
+      let perPage = parseInt(limit) || 10;
+      let skip = (currentPage - 1) * perPage;
+  
+      newData = newData.skip(skip).limit(perPage);
+  
+      let totalDocs = await Todo.countDocuments(queryObj);
+  
+      let totalPages = Math.ceil(totalDocs / perPage);
+  
+      let data = await newData;
+  
+      res.send({ todos: data, totalPages: totalPages });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    }
+  });
 
-
-})
-
+  
 
 todo.get("/chartdata",authentication,async(req,res)=>{
     const user_id=req.body.user_id;

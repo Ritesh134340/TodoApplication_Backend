@@ -6,9 +6,6 @@ const cors=require("cors");
 const app=express();
 
 
-// app.use(cors());
-
-
 app.use(cors( 
 {
   origin:"https://todoapplicationmern.netlify.app",
@@ -18,19 +15,7 @@ app.use(cors(
 ))
 
 
-// app.use(
-//   cookieSession({
-//     secret:process.env.SECRET_KEY,
-//     resave:true,
-//     saveUninitialized:true,
-//     cookie:{
-//       sameSite:"none",
-//       secure:true,
-//       maxAge:1000*60*60*24*7
-//     }
-     
-//   })
-// );
+
 
 app.use(passport.initialize())
 

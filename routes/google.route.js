@@ -35,30 +35,6 @@ auth.get('/google/callback', function(req, res, next) {
 });
 
 
-// auth.get('/google/profile',(req,res)=>{
- 
-//   if(req.user){
-//     const {_id,first_name,last_name,email,image}=req.user;
-
-//     const token = jwt.sign(
-//       { user_id:_id, email: email },
-//       process.env.SECRET_KEY
-//     );
-
-//     res.send({
-//       mesg:"Authentication Successful",
-//       token:token,
-//       name:first_name,
-//       title:last_name,
-//       email:email,
-//       image:image
-//     })
-  
-//   }
-//   else{
-//     res.send({mesg:"Someting went wrong, try again  later"})
-//   }
-// })
 
  
   

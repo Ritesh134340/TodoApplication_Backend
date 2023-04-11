@@ -2,7 +2,6 @@ require("dotenv").config();
 const passport=require("./config/googleStrategy")
 const connection=require("./config/db");
 const express=require("express");
-// const cookieSession = require("cookie-session");
 const cors=require("cors");
 const app=express();
 
@@ -34,12 +33,6 @@ app.use(cors());
 // );
 
 app.use(passport.initialize())
-
-// app.use(passport.session());
-
-
-app.get("/",(req,res)=>{
-})
 
 app.use("/images",express.static("images"))
 app.use(express.json());

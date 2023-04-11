@@ -8,32 +8,41 @@ const upload = require("../middlewares/upload.middleware");
 const authentication = require("../middlewares/authentication.middleware");
 
 user.post("/signup", upload.single("image"), async (req, res) => {
-  const path = `${process.env.PROFILE_IMAGE_PATH_URL}/images/${req.file.filename}`;
+  try{
+    const path = `${process.env.PROFILE_IMAGE_PATH_URL}/images/${req.file.filename}`;
 
-  const { first_name, last_name, email, password } = req.body;
-  const check = await User.findOne({ email: email });
-
-  if (check) {
-    res.status(409).send({ mesg: "User already exist, please login" });
-  } else {
-    bcrypt.hash(password, 4, async function (err, hash) {
-      if (err) {
-        res.status(500).send({ mesg: "Something went wrong please try again" });
-      }
-      const new_user = new User({
-        first_name: first_name,
-        last_name: last_name,
-        email: email,
-        password: hash,
-        image: path,
+    const { first_name, last_name, email, password } = req.body;
+    const check = await User.findOne({ email: email });
+  
+    if (check) {
+      res.status(409).send({ mesg: "User already exist, please login" });
+    } else {
+      bcrypt.hash(password, 4, async function (err, hash) {
+        if (err) {
+          res.status(500).send({ mesg: "Something went wrong please try again" });
+        }
+        const new_user = new User({
+          first_name: first_name,
+          last_name: last_name,
+          email: email,
+          password: hash,
+          image: path,
+        });
+  
+        await new_user.save();
+  
+        res.status(200).send({ mesg: "Signup Successful" });
       });
-
-      await new_user.save();
-
-      res.status(200).send({ mesg: "Signup Successful" });
-    });
+    }
   }
+  catch(err){
+    console.error("Error from signup route, error is : ",err)
+    res.status(500).send({mesg:"Internal server error !"})
+  }
+ 
 });
+
+
 
 user.post("/login", async (req, res) => {
   try{
